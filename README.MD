@@ -67,3 +67,25 @@ go get golang.org/x/crypto/bcrypt
 ```
 go get github.com/spf13/viper
 ```
+
+## (Optional) Docker command
+
+- MYSQL
+```
+docker pull mysql
+```
+```
+docker run --name <currentname> -e MYSQL_ROOT_PASSWORD=<currentpassword> -p 3306:3306 -d mysql
+```
+OR
+```
+docker run --name <currentname> -e MYSQL_ALLOW_EMPTY_PASSWORD=true -p 3306:3306 -d mysql
+```
+
+- Redis
+```
+docker pull redis
+```
+```
+docker run --name <currentname> -p 6379:6379 -d redis
+```
