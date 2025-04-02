@@ -24,9 +24,13 @@ func NewController(dbconfig *databases.DatabaseConfig, redisstore *store.RedisAu
 
 type (
 	ResponseSuccessLogin struct {
-		Status      string                 `json:"status"`
-		AccessToken string                 `json:"access_token"`
-		User        resources.SafeCustomer `json:"user"`
+		Status       string                 `json:"status"`
+		AccessToken  string                 `json:"access_token"`
+		RefreshToken string                 `json:"refresh_token"`
+		User         resources.SafeCustomer `json:"user"`
+	}
+	ResponseSuccessRefresh struct {
+		AccessToken string `json:"access_token"`
 	}
 	ResponseSuccess struct {
 		Status string      `json:"status"`
@@ -38,11 +42,18 @@ type (
 	}
 )
 
-func ResponseSuccessLoginData(status string, accessToken string, user resources.SafeCustomer) ResponseSuccessLogin {
+func ResponseSuccessLoginData(status string, accessToken string, refreshToken string, user resources.SafeCustomer) ResponseSuccessLogin {
 	return ResponseSuccessLogin{
-		Status:      status,
+		Status:       status,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User:         user,
+	}
+}
+
+func ResponseSuccessRefreshData(accessToken string) ResponseSuccessRefresh {
+	return ResponseSuccessRefresh{
 		AccessToken: accessToken,
-		User:        user,
 	}
 }
 

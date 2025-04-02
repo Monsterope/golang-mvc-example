@@ -7,16 +7,16 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GetTokenJWT(headerAuth string) (*Claim, string) {
+func GetTokenJWT(headerAuth string) (*Claim, interface{}, string) {
 	if headerAuth == "" || !strings.HasPrefix(headerAuth, "Bearer ") {
-		return nil, "Invalid or missing authorization header"
+		return nil, "Invalid or missing authorization header", headerAuth
 	}
 
 	jwtSecret := []byte(config.GetEnv("jwt.secret"))
 	headerToken := strings.TrimPrefix(headerAuth, "Bearer ")
 	parts := strings.Split(headerToken, ".")
 	if len(parts) != 3 {
-		return nil, "Invalid token"
+		return nil, "Invalid token", headerAuth
 		// return nil, c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 		// 	"error": "Invalid Token",
 		// })
@@ -28,13 +28,11 @@ func GetTokenJWT(headerAuth string) (*Claim, string) {
 		return jwtSecret, nil
 	})
 
-	if token == nil {
-		return nil, "Invalid token"
-	} else if err != nil {
-		return nil, err.Error()
+	if err != nil || !token.Valid {
+		return nil, "Invalid token", headerToken
 	}
 	// fmt.Println(token)
 
-	return claimUser, ""
+	return claimUser, nil, headerToken
 
 }

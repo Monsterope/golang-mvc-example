@@ -13,6 +13,11 @@ Project tutorial, learning for golang model MVC
 go mod download
 ```
 
+- Create or copy from .env.example (*Command for bash or zsh)
+```
+cp .env.example .env
+```
+
 - Run project
 ```
 go run main.go

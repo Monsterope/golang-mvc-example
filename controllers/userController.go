@@ -33,8 +33,26 @@ func (ctr *Controller) Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(ResponseFailureData("failure", resultToken.Message))
 	}
 
-	responseData := ResponseSuccessLoginData("success", resultToken.Message, resources.SafeModelCustomer(dbuser))
+	responseData := ResponseSuccessLoginData("success", resultToken.Message, resultToken.Message2, resources.SafeModelCustomer(dbuser))
 	return c.JSON(responseData)
+}
+
+func (ctr *Controller) RefreshToken(c *fiber.Ctx) error {
+
+	reqToken := new(middleware.RefreshTokenRequest)
+
+	if err := c.BodyParser(reqToken); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(ResponseFailureData("failure", "bad request"))
+	}
+
+	resultToken := middleware.RefreshToken(reqToken.RefreshToken, ctr.RedisStore)
+
+	if resultToken.Status != 0 {
+		return c.Status(resultToken.Status).JSON(ResponseFailureData("failure", resultToken.Message))
+	}
+
+	return c.JSON(ResponseSuccessRefreshData(resultToken.Message))
+
 }
 
 func (ctr *Controller) Register(c *fiber.Ctx) error {
